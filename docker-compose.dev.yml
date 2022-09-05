@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  frontend:
+    container_name: plane_game
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
