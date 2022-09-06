@@ -9,7 +9,8 @@ interface IHomePageProps {
 }
 
 const HomePage = ({ socket }: IHomePageProps) => {
-  const [error, setError] = useState<string|null>(null)
+  const [error, setError] = useState<string>("")
+
 
   useEffect(() => {
     console.log(error)
@@ -25,7 +26,7 @@ const HomePage = ({ socket }: IHomePageProps) => {
       })
 
       socket.on("join_error", (message: string) => {
-        setError(error)
+        setError(message)
         console.error(message)
       })
     }
@@ -44,8 +45,7 @@ const HomePage = ({ socket }: IHomePageProps) => {
           <Link to="/game"><Button type="primary"> Aller il faut jouer maintenant</Button></Link>
         </Panel>
         <Panel header="Rejoin une partie" key="2">
-          {error && error}
-          <Alert message={error} type="error" />
+          { error && <Alert message={error} type="error" /> }
           <Form
             name="basic"
             initialValues={{}}
