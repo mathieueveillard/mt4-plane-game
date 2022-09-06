@@ -4,6 +4,7 @@ import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import ParticleEntity from "./entities/particle.entity";
+import {ParticleEntityTypeEnum} from "../../enums/games/entities/particle.entity.enum";
 
 class MainGame extends CanvasGame {
 
@@ -14,12 +15,12 @@ class MainGame extends CanvasGame {
   private commands = new CommandsGame()
 
   startGame() {
-    const plane = new PlaneEntity({game: this, position: { x: 500, y: 500}})
+    const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
     this.planes.push(plane)
 
 
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 200}}))
+    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 400, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 200, y: 500}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 600, y: 150}}))
@@ -31,9 +32,22 @@ class MainGame extends CanvasGame {
     this.refreshCanvas()
 
     const plane = this.planes[0]
-    const planeInstructions = this.commands.getPlaneInstructions()
 
+    const planeInstructions = this.commands.getPlaneInstructions()
     plane.move(planeInstructions)
+
+    // Temporary -> moving plane
+    for (const plane of this.planes.slice(1, this.planes.length)) {
+      plane.move({
+        left: false,
+        right: false,
+        up: false,
+        down: false,
+        space: false,
+      })
+    }
+
+
 
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
@@ -51,7 +65,14 @@ class MainGame extends CanvasGame {
 
         if (this.checkCollision(plane, bullet)) {
           bullet.destroy()
-          plane.destroy()
+
+          if (plane.lives === 1) {
+            plane.destroy()
+
+          } else {
+            plane.impact()
+          }
+
         }
 
       }

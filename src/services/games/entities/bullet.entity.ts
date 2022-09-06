@@ -17,7 +17,7 @@ class BulletEntity {
   constructor({game, plane}: { game: MainGame, plane: PlaneEntity }) {
     let posDelta = plane.rotatePoint({x: 0, y: -20}, {x: 0, y: 0}, plane.rotation * Math.PI / 180);
 
-    this.velocity = new VelocityGame({x: posDelta.x / 2, y: posDelta.y / 2})
+    this.velocity = new VelocityGame({x: posDelta.x / 1.5, y: posDelta.y / 1.5 })
     this.position = new PositionGame({x: plane.position.x, y: plane.position.y})
 
     this.rotation = plane.rotation
