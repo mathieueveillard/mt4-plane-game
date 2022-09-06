@@ -9,17 +9,19 @@ import {ParticleEntityTypeEnum} from "../../../enums/games/entities/particle.ent
 class PlaneEntity {
   public position: PositionGame
   public rotation: number = 0
-  public radius: number = 30
+
+  public readonly radius: number = 30
 
   private velocity: VelocityGame = new VelocityGame({x: 0, y: 0})
   private delete: boolean = false
-  private rotationSpeed: number = 6
   private lives: number = 3
   private bullets: number = 5
-  private speed: number = 0.15
-  private inertia: number = 0.99
   private lastShot: number = 0
 
+  private readonly speed: number = 0.15
+  private readonly speedMinimum: number = 0.03
+  private readonly inertia: number = 0.985
+  private readonly rotationSpeed: number = 1.7
   private readonly game: MainGame
 
   constructor({game, position}: { game: MainGame, position: PositionGame }) {
@@ -28,11 +30,15 @@ class PlaneEntity {
     this.game = game
   }
 
-  accelerate() {
-    this.velocity.x -= Math.sin(-this.rotation * Math.PI / 180) * this.speed;
-    this.velocity.y -= Math.cos(-this.rotation * Math.PI / 180) * this.speed;
+  accelerate(speed: number) {
+    this.velocity.x -= Math.sin(-this.rotation * Math.PI / 180) * speed;
+    this.velocity.y -= Math.cos(-this.rotation * Math.PI / 180) * speed;
 
-    const particle = new ParticleEntity({game: this.game, plane: this, particle: { type: ParticleEntityTypeEnum.TRAIL }})
+    this.getTrail()
+  }
+
+  getTrail() {
+    const particle = new ParticleEntity({game: this.game, plane: this, particle: {type: ParticleEntityTypeEnum.TRAIL}})
     this.game.particles.push(particle)
   }
 
@@ -40,15 +46,24 @@ class PlaneEntity {
     this.delete = true;
 
     for (let idx = 0; idx < 100; idx++) {
-      const particle = new ParticleEntity({game: this.game, plane: this, particle: { type: ParticleEntityTypeEnum.EXPLODE }})
+      const particle = new ParticleEntity({
+        game: this.game,
+        plane: this,
+        particle: {type: ParticleEntityTypeEnum.EXPLODE}
+      })
       this.game.particles.push(particle)
     }
   }
 
   move(planeInstructions: CommandsGameInterface) {
+
     if (planeInstructions.up) {
-      this.accelerate();
+      this.accelerate(this.speed);
+    } else {
+      this.accelerate(this.speedMinimum);
     }
+
+
     if (planeInstructions.left) {
       this.rotation -= this.rotationSpeed;
     }
