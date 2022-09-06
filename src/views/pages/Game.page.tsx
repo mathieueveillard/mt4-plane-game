@@ -1,7 +1,12 @@
 import MapGame from "../molecules/games/MapGame";
 import {useEffect} from "react";
+import { Socket } from "socket.io-client";
 
-const GamePage = () => {
+interface IGamePageProps {
+  socket: Socket|null
+}
+
+const GamePage = ({ socket }: IGamePageProps) => {
 
   useEffect(() => {
     javascript:(function(){var script=document.createElement('script');script.onload=function(){ // @ts-ignore
