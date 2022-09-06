@@ -43,6 +43,15 @@ class PlaneEntity {
     }
   }
 
+  public impact() {
+    for (let idx = 0; idx < 10; idx++) {
+      const particle = new ParticleEntity({game: this.game, plane: this, particle: {type: ParticleEntityTypeEnum.IMPACT}})
+      this.game.particles.push(particle)
+    }
+
+    this.lives -= 1
+  }
+
   public move(planeInstructions: CommandsGameInterface) {
 
     if (planeInstructions.up) {

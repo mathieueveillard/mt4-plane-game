@@ -4,6 +4,7 @@ import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import ParticleEntity from "./entities/particle.entity";
+import {ParticleEntityTypeEnum} from "../../enums/games/entities/particle.entity.enum";
 
 class MainGame extends CanvasGame {
 
@@ -19,7 +20,7 @@ class MainGame extends CanvasGame {
 
 
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 200}}))
+    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 400, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 200, y: 500}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 600, y: 150}}))
@@ -59,7 +60,6 @@ class MainGame extends CanvasGame {
 
   checkCollisionsWith(planes: PlaneEntity[], bullets: BulletEntity[]) {
     for (const bullet of bullets) {
-    // switch (CalculatorsApp.randomNumberBetween(0, 5, {round: true})) {
 
       for (const plane of planes) {
 
@@ -70,7 +70,7 @@ class MainGame extends CanvasGame {
             plane.destroy()
 
           } else {
-            plane.lives -= 1
+            plane.impact()
           }
 
         }
