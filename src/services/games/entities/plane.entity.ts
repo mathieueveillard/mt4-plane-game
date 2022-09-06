@@ -116,11 +116,19 @@ class PlaneEntity {
     context.fillStyle = '#000000';
     context.lineWidth = 2;
     context.beginPath();
+
     context.moveTo(0, -15);
-    context.lineTo(10, 10);
-    context.lineTo(5, 7);
-    context.lineTo(-5, 7);
-    context.lineTo(-10, 10);
+
+    // Propeller
+    context.fillRect(-5, -12, 10, 1);
+    context.fillRect(-1.5, -12, 3, 2);
+    // Body
+    context.fillRect(-2.5, -10, 5, 35);
+    // Wing
+    context.fillRect(-20, -5, 40, 10);
+    // Aileron
+    context.fillRect(-7.5, 20, 15, 2.5);
+
     context.closePath();
     context.fill();
     context.stroke();

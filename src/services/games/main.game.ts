@@ -35,9 +35,9 @@ class MainGame extends CanvasGame {
 
     plane.move(planeInstructions)
 
+    this.updateObjects(this.particles)
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
-    this.updateObjects(this.particles)
 
     this.checkCollisionsWith(this.planes, this.bullets)
 

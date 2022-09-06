@@ -29,10 +29,10 @@ class CanvasGame {
   refreshCanvas() {
     this.context.save();
 
-    this.context.fillStyle = '#000';
-    this.context.globalAlpha = 0.4;
+    this.context.fillStyle = '#6698f3';
+    // this.context.globalAlpha = 0.4;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.globalAlpha = 1;
+    // this.context.globalAlpha = 1;
 
     this.context.restore();
   }
