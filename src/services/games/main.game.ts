@@ -3,6 +3,7 @@ import UserPlayer from "./players/user.player";
 import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
+import { Socket } from "socket.io-client";
 import ParticleEntity from "./entities/particle.entity";
 import {ParticleEntityTypeEnum} from "../../enums/games/entities/particle.entity.enum";
 
@@ -27,7 +28,7 @@ class MainGame extends CanvasGame {
     this.planes.push(new PlaneEntity({game: this, position: { x: 600, y: 100}}))
   }
 
-  update() {
+  update(socket: Socket) {
     this.saveContext();
     this.refreshCanvas()
 
@@ -47,7 +48,7 @@ class MainGame extends CanvasGame {
       })
     }
 
-
+    socket.emit("move", "test", plane.position.y, plane.position.x)
 
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
