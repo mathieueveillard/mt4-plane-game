@@ -15,7 +15,7 @@ class BulletEntity {
   private readonly game: MainGame
 
   constructor({game, plane}: { game: MainGame, plane: PlaneEntity }) {
-    let posDelta = this.rotatePoint({x: 0, y: -20}, {x: 0, y: 0}, plane.rotation * Math.PI / 180);
+    let posDelta = plane.rotatePoint({x: 0, y: -20}, {x: 0, y: 0}, plane.rotation * Math.PI / 180);
 
     this.velocity = new VelocityGame({x: posDelta.x / 2, y: posDelta.y / 2})
     this.position = new PositionGame({x: plane.position.x, y: plane.position.y})
@@ -30,28 +30,15 @@ class BulletEntity {
     this.delete = true;
   }
 
-  /**
-   * Rotate point around center on certain angle
-   * @param {Object} p        {x: Number, y: Number}
-   * @param {Object} center   {x: Number, y: Number}
-   * @param {Number} angle    Angle in radians
-   */
-  rotatePoint(p: any, center: any, angle: any) {
-    return {
-      x: ((p.x - center.x) * Math.cos(angle) - (p.y - center.y) * Math.sin(angle)) + center.x,
-      y: ((p.x - center.x) * Math.sin(angle) + (p.y - center.y) * Math.cos(angle)) + center.y
-    };
-  };
-
   render() {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    const context: CanvasRenderingContext2D = this.game.getContext()
-
     if (this.game.isOutOfArea(this.position)) {
       this.destroy();
     }
+
+    const context: CanvasRenderingContext2D = this.game.getContext()
 
     context.save();
     context.translate(this.position.x, this.position.y);

@@ -3,20 +3,23 @@ import UserPlayer from "./players/user.player";
 import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
+import ParticleEntity from "./entities/particle.entity";
 
 class MainGame extends CanvasGame {
 
   public bullets: BulletEntity[] = []
+  public particles: ParticleEntity[] = []
   private users: UserPlayer[] = []
   private planes: PlaneEntity[] = []
   private commands = new CommandsGame()
 
   startGame() {
-    const plane = new PlaneEntity({game: this, position: { x: 100, y: 100}})
+    const plane = new PlaneEntity({game: this, position: { x: 500, y: 500}})
     this.planes.push(plane)
 
 
-    this.planes.push(new PlaneEntity({game: this, position: { x: 200, y: 100}}))
+    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
+    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 200}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 400, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 200, y: 500}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 600, y: 150}}))
@@ -34,6 +37,7 @@ class MainGame extends CanvasGame {
 
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
+    this.updateObjects(this.particles)
 
     this.checkCollisionsWith(this.planes, this.bullets)
 

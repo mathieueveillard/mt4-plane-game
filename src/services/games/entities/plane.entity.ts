@@ -3,6 +3,8 @@ import BulletEntity from "./bullet.entity";
 import MainGame from "../main.game";
 import PositionGame from "../settings/position.game";
 import VelocityGame from "../settings/velocity.game";
+import ParticleEntity from "./particle.entity";
+import {ParticleEntityTypeEnum} from "../../../enums/games/entities/particle.entity.enum";
 
 class PlaneEntity {
   public position: PositionGame
@@ -20,7 +22,7 @@ class PlaneEntity {
 
   private readonly game: MainGame
 
-  constructor({game, position}: { game: MainGame, position: { x: number, y: number } }) {
+  constructor({game, position}: { game: MainGame, position: PositionGame }) {
     this.position = new PositionGame(position)
 
     this.game = game
@@ -29,10 +31,18 @@ class PlaneEntity {
   accelerate() {
     this.velocity.x -= Math.sin(-this.rotation * Math.PI / 180) * this.speed;
     this.velocity.y -= Math.cos(-this.rotation * Math.PI / 180) * this.speed;
+
+    const particle = new ParticleEntity({game: this.game, plane: this, particle: { type: ParticleEntityTypeEnum.TRAIL }})
+    this.game.particles.push(particle)
   }
 
   destroy() {
     this.delete = true;
+
+    for (let idx = 0; idx < 100; idx++) {
+      const particle = new ParticleEntity({game: this.game, plane: this, particle: { type: ParticleEntityTypeEnum.EXPLODE }})
+      this.game.particles.push(particle)
+    }
   }
 
   move(planeInstructions: CommandsGameInterface) {
@@ -82,6 +92,19 @@ class PlaneEntity {
       this.position.y = height;
     }
   }
+
+  /**
+   * Rotate point around center on certain angle
+   * @param position PositionGame
+   * @param center PositionGame
+   * @param angle angle
+   */
+  rotatePoint(position: PositionGame, center: PositionGame, angle: number): PositionGame {
+    return {
+      x: ((position.x - center.x) * Math.cos(angle) - (position.y - center.y) * Math.sin(angle)) + center.x,
+      y: ((position.x - center.x) * Math.sin(angle) + (position.y - center.y) * Math.cos(angle)) + center.y
+    };
+  };
 
   render() {
     const context: CanvasRenderingContext2D = this.game.getContext()
