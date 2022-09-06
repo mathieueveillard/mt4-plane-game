@@ -4,7 +4,7 @@ services:
     container_name: plane_game
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     command: /bin/bash -c "while sleep 1000; do :; done"
     ports:
       - "3000:3000"

@@ -7,9 +7,9 @@
 
 ### Start the container
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+docker compose up -d
 
-docker compose -f docker-compose.dev.yml exec -it frontend
+docker compose exec -it frontend
 
 yarn install
 
