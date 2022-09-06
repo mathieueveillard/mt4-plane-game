@@ -29,7 +29,7 @@ class CanvasGame {
   refreshCanvas() {
     this.context.save();
 
-    this.context.fillStyle = '#6698f3';
+    this.context.fillStyle = '#1863da';
     // this.context.globalAlpha = 0.4;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     // this.context.globalAlpha = 1;
