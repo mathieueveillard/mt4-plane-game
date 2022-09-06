@@ -1,7 +1,7 @@
-
+import Setting from "../../views/molecules/setting/seetting"
 const HomePage = () => {
 
-  return (<p>Hey</p>)
+  return (<Setting/>)
 }
 
 export default HomePage
