@@ -47,8 +47,6 @@ class MainGame extends CanvasGame {
       })
     }
 
-
-
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
     this.updateObjects(this.particles)

@@ -108,7 +108,7 @@ class PlaneEntity {
     context.translate(this.position.x, this.position.y);
     context.rotate(this.rotation * Math.PI / 180);
     context.strokeStyle = '#ffffff';
-    context.fillStyle = '#000000';
+    context.fillStyle = '#ffffff';
     context.lineWidth = 2;
     context.beginPath();
 
@@ -116,7 +116,7 @@ class PlaneEntity {
 
     // Propeller
     context.fillRect(-5, -12, 10, 1);
-    context.fillRect(-1.5, -12, 3, 2);
+    context.fillRect(-1.5, -13, 3, 5);
     // Body
     context.fillRect(-2.5, -10, 5, 35);
     // Wing
