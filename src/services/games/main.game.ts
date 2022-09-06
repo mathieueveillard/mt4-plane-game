@@ -4,11 +4,12 @@ import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import ParticleEntity from "./entities/particle.entity";
-import {ParticleEntityTypeEnum} from "../../enums/games/entities/particle.entity.enum";
+import CloudEntity from "./entities/cloud.entity";
 
 class MainGame extends CanvasGame {
 
   public bullets: BulletEntity[] = []
+  public clouds: CloudEntity[] = []
   public particles: ParticleEntity[] = []
   private users: UserPlayer[] = []
   private planes: PlaneEntity[] = []
@@ -18,6 +19,8 @@ class MainGame extends CanvasGame {
     const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
     this.planes.push(plane)
 
+    const cloud = new CloudEntity({game: this, position: { x: 500, y: 1000}})
+    this.clouds.push(cloud)
 
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
@@ -47,6 +50,7 @@ class MainGame extends CanvasGame {
       })
     }
 
+    this.updateObjects(this.clouds)
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
     this.updateObjects(this.particles)
