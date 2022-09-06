@@ -9,14 +9,15 @@ class ParticleEntity {
   public position: PositionGame
   public radius: number = 3
 
-  private inertia: number = 0.98
   private velocity: VelocityGame
   private delete: boolean = false
   private lifeFrame: number = 0
-  private type: ParticleEntityTypeEnum
   private color: string = ''
 
+  private readonly type: ParticleEntityTypeEnum
+  private readonly inertia: number = 0.98
   private readonly game: MainGame
+  private readonly plane: PlaneEntity
 
   constructor({
                 game,
@@ -61,58 +62,14 @@ class ParticleEntity {
     }
 
     this.game = game
+    this.plane = plane
   }
 
-  destroy() {
+  public destroy() {
     this.delete = true;
   }
 
-  getColorParticle(): string {
-    if (this.color.length === 0) {
-      this.color = this.getColorByType()
-    }
-
-    return this.color;
-  }
-
-  getColorByType(): string {
-    switch (this.type) {
-      case ParticleEntityTypeEnum.TRAIL:
-      case ParticleEntityTypeEnum.EXPLODE:
-        return this.getColorExplode()
-
-      default:
-        throw new Error('[ParticleEntity] Type not defined');
-    }
-  }
-
-  getColorExplode(): string {
-    const t = CalculatorsApp.randomNumberBetween(0, 5, {round: true})
-    switch (t) {
-      case 0:
-        return '#b9b4b4';
-
-      case 1:
-        return '#8c8987';
-
-      case 2:
-        return '#484646';
-
-      case 3:
-        return '#8a8686';
-
-      case 4:
-        return '#9a8f8f';
-
-      case 5:
-        return '#737171';
-
-      default:
-        throw new Error('[ParticleEntity] Color number not defined');
-    }
-  }
-
-  render() {
+  public render() {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
     this.velocity.x *= this.inertia;
@@ -144,6 +101,137 @@ class ParticleEntity {
     context.closePath();
     context.fill();
     context.restore();
+  }
+
+  private getColorParticle(): string {
+    if (this.color.length === 0) {
+      this.color = this.getColorByType()
+    }
+
+    return this.color;
+  }
+
+  private getColorByType(): string {
+    switch (this.type) {
+      case ParticleEntityTypeEnum.TRAIL:
+        return this.getColorTrail()
+
+
+      case ParticleEntityTypeEnum.EXPLODE:
+        return this.getColorExplode()
+
+      default:
+        throw new Error('[ParticleEntity] Type not defined');
+    }
+  }
+
+  private getColorTrail(): string {
+    switch (this.plane.lives) {
+
+      case 0:
+      case 1:
+        return this.getColorTrailOneLive();
+
+      case 2:
+        return this.getColorTrailTwoLives()
+
+      case 3:
+        return this.getColorTrailThreeLives();
+
+      default:
+        throw new Error('[ParticleEntity] Plane lives not defined');
+    }
+  }
+
+  private getColorTrailOneLive() {
+    switch (CalculatorsApp.randomNumberBetween(0, 3, {round: true})) {
+      case 0:
+        return '#ec1515';
+
+      case 1:
+        return '#e86a16';
+
+      case 2:
+        return '#ff0000';
+
+      case 3:
+        return '#8a8686';
+
+      default:
+        throw new Error('[ParticleEntity] Color number not defined');
+    }
+  }
+
+  private getColorTrailTwoLives() {
+    switch (CalculatorsApp.randomNumberBetween(0, 3, {round: true})) {
+      case 0:
+        return '#b9b4b4';
+
+      case 1:
+        return '#8c8987';
+
+      case 2:
+        return '#484646';
+
+      case 3:
+        return '#8a8686';
+
+      default:
+        throw new Error('[ParticleEntity] Color number not defined');
+    }
+  }
+
+  private getColorTrailThreeLives() {
+    switch (CalculatorsApp.randomNumberBetween(0, 3, {round: true})) {
+      case 0:
+        return '#f1f1f1';
+
+      case 1:
+        return '#dad9d7';
+
+      case 2:
+        return '#f1e5e5';
+
+      case 3:
+        return '#f5f2f2';
+
+      default:
+        throw new Error('[ParticleEntity] Color number not defined');
+    }
+  }
+
+  private getColorExplode(): string {
+    switch (CalculatorsApp.randomNumberBetween(0, 8, {round: true})) {
+      case 0:
+        return '#b9b4b4';
+
+      case 1:
+        return '#8c8987';
+
+      case 2:
+        return '#484646';
+
+      case 3:
+        return '#8a8686';
+
+      case 4:
+        return '#9a8f8f';
+
+      case 5:
+        return '#737171';
+
+      case 6:
+        return '#916363';
+
+      case 7:
+        return '#934646';
+
+      case 8:
+        return '#ad4c4c';
+
+      default:
+        throw new Error('[ParticleEntity] Color number not defined');
+    }
   }
 }
 

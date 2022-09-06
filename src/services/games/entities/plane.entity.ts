@@ -9,12 +9,12 @@ import {ParticleEntityTypeEnum} from "../../../enums/games/entities/particle.ent
 class PlaneEntity {
   public position: PositionGame
   public rotation: number = 0
+  public lives: number = 3
 
   public readonly radius: number = 30
 
   private velocity: VelocityGame = new VelocityGame({x: 0, y: 0})
   private delete: boolean = false
-  private lives: number = 3
   private bullets: number = 5
   private lastShot: number = 0
 
@@ -30,19 +30,7 @@ class PlaneEntity {
     this.game = game
   }
 
-  accelerate(speed: number) {
-    this.velocity.x -= Math.sin(-this.rotation * Math.PI / 180) * speed;
-    this.velocity.y -= Math.cos(-this.rotation * Math.PI / 180) * speed;
-
-    this.getTrail()
-  }
-
-  getTrail() {
-    const particle = new ParticleEntity({game: this.game, plane: this, particle: {type: ParticleEntityTypeEnum.TRAIL}})
-    this.game.particles.push(particle)
-  }
-
-  destroy() {
+  public destroy() {
     this.delete = true;
 
     for (let idx = 0; idx < 100; idx++) {
@@ -55,14 +43,13 @@ class PlaneEntity {
     }
   }
 
-  move(planeInstructions: CommandsGameInterface) {
+  public move(planeInstructions: CommandsGameInterface) {
 
     if (planeInstructions.up) {
       this.accelerate(this.speed);
     } else {
       this.accelerate(this.speedMinimum);
     }
-
 
     if (planeInstructions.left) {
       this.rotation -= this.rotationSpeed;
@@ -92,36 +79,20 @@ class PlaneEntity {
     this.screenEdge()
   }
 
-  screenEdge() {
-    const {width, height} = this.game.getCanvasSize()
-
-    if (this.position.x > width) {
-      this.position.x = 0;
-    } else if (this.position.x < 0) {
-      this.position.x = width;
-    }
-
-    if (this.position.y > height) {
-      this.position.y = 0;
-    } else if (this.position.y < 0) {
-      this.position.y = height;
-    }
-  }
-
   /**
    * Rotate point around center on certain angle
    * @param position PositionGame
    * @param center PositionGame
    * @param angle angle
    */
-  rotatePoint(position: PositionGame, center: PositionGame, angle: number): PositionGame {
+  public rotatePoint(position: PositionGame, center: PositionGame, angle: number): PositionGame {
     return {
       x: ((position.x - center.x) * Math.cos(angle) - (position.y - center.y) * Math.sin(angle)) + center.x,
       y: ((position.x - center.x) * Math.sin(angle) + (position.y - center.y) * Math.cos(angle)) + center.y
     };
   };
 
-  render() {
+  public render() {
     const context: CanvasRenderingContext2D = this.game.getContext()
 
     context.save();
@@ -148,6 +119,34 @@ class PlaneEntity {
     context.fill();
     context.stroke();
     context.restore();
+  }
+
+  private accelerate(speed: number) {
+    this.velocity.x -= Math.sin(-this.rotation * Math.PI / 180) * speed;
+    this.velocity.y -= Math.cos(-this.rotation * Math.PI / 180) * speed;
+
+    this.getTrail()
+  }
+
+  private getTrail() {
+    const particle = new ParticleEntity({game: this.game, plane: this, particle: {type: ParticleEntityTypeEnum.TRAIL}})
+    this.game.particles.push(particle)
+  }
+
+  private screenEdge() {
+    const {width, height} = this.game.getCanvasSize()
+
+    if (this.position.x > width) {
+      this.position.x = 0;
+    } else if (this.position.x < 0) {
+      this.position.x = width;
+    }
+
+    if (this.position.y > height) {
+      this.position.y = 0;
+    } else if (this.position.y < 0) {
+      this.position.y = height;
+    }
   }
 }
 
