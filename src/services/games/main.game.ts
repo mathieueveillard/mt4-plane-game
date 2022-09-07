@@ -19,8 +19,10 @@ class MainGame extends CanvasGame {
     const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
     this.planes.push(plane)
 
-    const cloud = new CloudEntity({game: this, position: { x: 500, y: 1000}})
+    const cloud = new CloudEntity({game: this, position: { x: 1000, y: 1000}})
     this.clouds.push(cloud)
+
+    console.log(this.clouds)
 
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
@@ -50,17 +52,18 @@ class MainGame extends CanvasGame {
       })
     }
 
-    this.updateObjects(this.clouds)
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
     this.updateObjects(this.particles)
+    this.updateObjects(this.clouds)
 
-    this.checkCollisionsWith(this.planes, this.bullets)
-
+    this.checkCollisionsWithPlanesAndCloud(this.planes, this.clouds)
+    this.checkCollisionsPlanesAndBullets(this.planes, this.bullets)
+    console.log(this.clouds)
     this.restoreContext()
   }
 
-  checkCollisionsWith(planes: PlaneEntity[], bullets: BulletEntity[]) {
+  checkCollisionsPlanesAndBullets(planes: PlaneEntity[], bullets: BulletEntity[]) {
     for (const bullet of bullets) {
 
       for (const plane of planes) {
@@ -81,7 +84,29 @@ class MainGame extends CanvasGame {
     }
   }
 
-  checkCollision(plane: PlaneEntity, bullet: BulletEntity) {
+
+  checkCollisionsWithPlanesAndCloud(planes: PlaneEntity[], clouds: CloudEntity[]) {
+    for (const cloud of clouds) {
+
+      for (const plane of planes) {
+
+        if (this.checkCollision(plane, cloud)) {
+          // cloud.destroy()
+
+          if (plane.lives === 1) {
+            // plane.destroy()
+
+          } else {
+            plane.impact()
+          }
+
+        }
+
+      }
+    }
+  }
+
+  checkCollision(plane: PlaneEntity, bullet: BulletEntity | CloudEntity) {
     const vx = plane.position.x - bullet.position.x;
     const vy = plane.position.y - bullet.position.y;
 

@@ -45,10 +45,10 @@ class CanvasGame {
     return {width: this.canvas.width, height: this.canvas.height}
   }
 
-  isOutOfArea({x, y}: PositionGame): boolean {
+  isOutOfArea({x, y}: PositionGame, radius: number = 0): boolean {
     const {width, height} = this.getCanvasSize()
 
-    return x < 0 || y < 0 || x > width || y > height
+    return x < 0 || y < 0 || x > width + radius || y > height + radius
   }
 
 
