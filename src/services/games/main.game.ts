@@ -8,6 +8,7 @@ import CloudEntity from "./entities/cloud.entity";
 import CalculatorsApp from "../apps/calculators.app";
 
 class MainGame extends CanvasGame {
+  private cloudMaximum: number = 3
 
   public bullets: BulletEntity[] = []
   public clouds: CloudEntity[] = []
@@ -20,21 +21,6 @@ class MainGame extends CanvasGame {
     const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
     this.planes.push(plane)
 
-    // x: randomNumBetweenExcluding(0, this.c.screen.width, ship.position.x-60, ship.position.x+60),
-    //   y: randomNumBetweenExcluding(0, this.state.screen.height, ship.position.y-60, ship.position.y+60)
-
-    const {width, height} = this.getCanvasSize()
-
-
-
-    this.getCanvasSize()
-
-
-    const cloud = new CloudEntity({game: this, position: { x: CalculatorsApp.randomNumberBetween(0, width), y:     CalculatorsApp.randomNumberBetween(0, height)}})
-    this.clouds.push(cloud)
-
-    console.log(this.clouds)
-
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 400, y: 100}}))
@@ -46,6 +32,11 @@ class MainGame extends CanvasGame {
   update() {
     this.saveContext();
     this.refreshCanvas()
+
+    if (this.clouds.length < this.cloudMaximum) {
+      const cloud = new CloudEntity({game: this})
+      this.clouds.push(cloud)
+    }
 
     const plane = this.planes[0]
 
@@ -68,9 +59,8 @@ class MainGame extends CanvasGame {
     this.updateObjects(this.particles)
     this.updateObjects(this.clouds)
 
-    this.checkCollisionsWithPlanesAndCloud(this.planes, this.clouds)
     this.checkCollisionsPlanesAndBullets(this.planes, this.bullets)
-    console.log(this.clouds)
+
     this.restoreContext()
   }
 
@@ -84,28 +74,6 @@ class MainGame extends CanvasGame {
 
           if (plane.lives === 1) {
             plane.destroy()
-
-          } else {
-            plane.impact()
-          }
-
-        }
-
-      }
-    }
-  }
-
-
-  checkCollisionsWithPlanesAndCloud(planes: PlaneEntity[], clouds: CloudEntity[]) {
-    for (const cloud of clouds) {
-
-      for (const plane of planes) {
-
-        if (this.checkCollision(plane, cloud)) {
-          // cloud.destroy()
-
-          if (plane.lives === 1) {
-            // plane.destroy()
 
           } else {
             plane.impact()

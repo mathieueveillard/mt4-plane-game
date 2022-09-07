@@ -11,39 +11,45 @@ class CloudEntity {
 
   public readonly plane: PlaneEntity
 
-  private cores: any = [];
+  private cores: { position: PositionGame, radius: number, color: string }[] = [];
+  private particles: { position: PositionGame, radius: number, color: string }[] = []
   private velocity: VelocityGame
-  private particles: any = []
 
-  private readonly inner_density = 10;
-  private readonly outer_density = 25
-  private readonly inner_range = 40;
-  private readonly inner_radius = 15;
-  private readonly num_cores = 5;
-  private readonly width
-  private readonly height
-  private readonly core_radius = 15;
+  private readonly densityInner: number = 10
+  private readonly densityOuter: number = 25
+  private readonly innerRange: number = 40
+  private readonly innerRadius: number = 15
+  private readonly coresNumber: number = 5
+  private readonly width: number = 100
+  private readonly height: number = 100
+  private readonly coreRadius: number = 15;
   private readonly game: MainGame
 
-  constructor({game, position}: { game: MainGame, position: PositionGame }) {
+  constructor({game}: { game: MainGame }) {
+    this.game = game
+
     const size = CalculatorsApp.randomNumberBetween(150, 250)
 
     this.width = size
     this.height = size
     this.radius = size / 2.5
 
-    this.position = new PositionGame(position)
+    const {width, height} = this.game.getCanvasSize()
+
+    this.position = new PositionGame({
+      x: CalculatorsApp.randomNumberBetweenExcluding(0, width, this.width, width + this.width),
+      y: CalculatorsApp.randomNumberBetweenExcluding(0, height, this.height, height + this.height),
+    })
 
     this.velocity = new VelocityGame({
-      x: CalculatorsApp.randomNumberBetween(-0.105, 0.105),
-      y: CalculatorsApp.randomNumberBetween(-0.105, 0.105)
+      x: CalculatorsApp.randomNumberBetween(0.1, 1.5),
+      y: CalculatorsApp.randomNumberBetween(0.1, 1.5)
     })
 
     this.setCloudsParticlesPrimary()
     this.setCloudsParticlesCores()
     this.setCloudsParticlesOuters()
 
-    this.game = game
   }
 
   public destroy() {
@@ -99,14 +105,14 @@ class CloudEntity {
   }
 
   private setCloudsParticlesPrimary() {
-    for (let idx = 0; idx < this.num_cores; idx++) {
+    for (let idx = 0; idx < this.coresNumber; idx++) {
 
       const cloudParticle = this.setCloudParticle(
         {
           x: this.width / 4 + Math.random() * (this.width / 2),
           y: this.height / 4 + Math.random() * (this.height / 2)
         },
-        this.core_radius,
+        this.coreRadius,
         'rgba(210, 210, 210, 0.1)'
       )
 
@@ -117,14 +123,14 @@ class CloudEntity {
 
   private setCloudsParticlesCores() {
     for (const core of this.cores) {
-      for (let idx = 0; idx < this.inner_density; idx++) {
+      for (let idx = 0; idx < this.densityInner; idx++) {
 
         const cloudParticle = this.setCloudParticle(
           {
-            x: core.position.x + this.randomSign() * Math.random() * this.inner_range,
-            y: core.position.y + this.randomSign() * Math.random() * this.inner_range
+            x: core.position.x + this.randomSign() * Math.random() * this.innerRange,
+            y: core.position.y + this.randomSign() * Math.random() * this.innerRange
           },
-          this.inner_radius,
+          this.innerRadius,
           'rgba(240, 240, 240, 0.1)'
         );
 
@@ -137,7 +143,7 @@ class CloudEntity {
     const outer_particles = [];
 
     for (const particle of this.particles) {
-      for (let idx = 0; idx < this.outer_density; idx++) {
+      for (let idx = 0; idx < this.densityOuter; idx++) {
         const cloudParticle = this.setCloudParticle(
           {
             x: particle.position.x + this.randomSign() * Math.random() * particle.radius,
