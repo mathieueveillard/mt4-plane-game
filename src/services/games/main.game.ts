@@ -8,7 +8,7 @@ import CloudEntity from "./entities/cloud.entity";
 import CalculatorsApp from "../apps/calculators.app";
 
 class MainGame extends CanvasGame {
-  private cloudMaximum: number = 3
+  private cloudMaximum: number = 1
 
   public bullets: BulletEntity[] = []
   public clouds: CloudEntity[] = []

@@ -9,16 +9,6 @@ class CalculatorsApp {
 
     return result
   };
-
-  static randomNumberBetweenExcluding(min: number, max: number, exMin: number, exMax: number) {
-    let random = this.randomNumberBetween(min, max);
-
-    while (random > exMin && random < exMax) {
-      random = Math.random() * (max - min + 1) + min;
-    }
-
-    return random;
-  };
 }
 
 export default CalculatorsApp

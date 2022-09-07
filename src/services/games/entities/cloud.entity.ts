@@ -28,7 +28,7 @@ class CloudEntity {
   constructor({game}: { game: MainGame }) {
     this.game = game
 
-    const size = CalculatorsApp.randomNumberBetween(150, 250)
+    const size = CalculatorsApp.randomNumberBetween(150, 300)
 
     this.width = size
     this.height = size
@@ -37,13 +37,13 @@ class CloudEntity {
     const {width, height} = this.game.getCanvasSize()
 
     this.position = new PositionGame({
-      x: CalculatorsApp.randomNumberBetweenExcluding(0, width, this.width, width + this.width),
-      y: CalculatorsApp.randomNumberBetweenExcluding(0, height, this.height, height + this.height),
+      x: CalculatorsApp.randomNumberBetween(0, width),
+      y: this.radius / 2,
     })
 
     this.velocity = new VelocityGame({
-      x: CalculatorsApp.randomNumberBetween(0.1, 1.5),
-      y: CalculatorsApp.randomNumberBetween(0.1, 1.5)
+      x: CalculatorsApp.randomNumberBetween(0.1, 0.2),
+      y: CalculatorsApp.randomNumberBetween(0.1, 0.2)
     })
 
     this.setCloudsParticlesPrimary()
