@@ -29,10 +29,10 @@ class CanvasGame {
   refreshCanvas() {
     this.context.save();
 
-    this.context.fillStyle = '#1863da';
-    // this.context.globalAlpha = 0.4;
+    this.context.fillStyle = '#000000';
+    this.context.globalAlpha = 0.4;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.context.globalAlpha = 1;
+    this.context.globalAlpha = 1;
 
     this.context.restore();
   }
@@ -45,10 +45,10 @@ class CanvasGame {
     return {width: this.canvas.width, height: this.canvas.height}
   }
 
-  isOutOfArea({x, y}: PositionGame): boolean {
+  isOutOfArea({x, y}: PositionGame, radius: number = 0): boolean {
     const {width, height} = this.getCanvasSize()
 
-    return x < 0 || y < 0 || x > width || y > height
+    return x < 0 || y < 0 || x > width + radius || y > height + radius
   }
 
 

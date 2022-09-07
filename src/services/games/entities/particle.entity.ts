@@ -6,12 +6,11 @@ import {ParticleEntityTypeEnum} from "../../../enums/games/entities/particle.ent
 import CalculatorsApp from "../../apps/calculators.app";
 
 class ParticleEntity {
-  // @ts-ignore
-  public position: PositionGame = null
+  public position: PositionGame
   public radius: number = 3
+  public delete: boolean = false
 
   private velocity: VelocityGame
-  private delete: boolean = false
   private lifeFrame: number = 0
   private color: string = ''
 
@@ -182,13 +181,13 @@ class ParticleEntity {
   private getColorImpact(): string {
     switch (CalculatorsApp.randomNumberBetween(0, 2, {round: true})) {
       case 0:
-        return '#3d3d3d';
+        return '#bbbbbb';
 
       case 1:
-        return '#28201b';
+        return '#b6b6b3';
 
       case 2:
-        return '#4f4545';
+        return '#dedcdc';
 
       default:
         throw new Error('[ParticleEntity] Color number not defined');
@@ -216,13 +215,13 @@ class ParticleEntity {
   private getColorTrailOneLive() {
     switch (CalculatorsApp.randomNumberBetween(0, 3, {round: true})) {
       case 0:
-        return '#ec1515';
+        return '#f37272';
 
       case 1:
-        return '#e86a16';
+        return '#f5ac79';
 
       case 2:
-        return '#ff0000';
+        return '#deb8b8';
 
       case 3:
         return '#8a8686';
@@ -273,31 +272,31 @@ class ParticleEntity {
   private getColorExplode(): string {
     switch (CalculatorsApp.randomNumberBetween(0, 8, {round: true})) {
       case 0:
-        return '#b9b4b4';
+        return '#ccc8c8';
 
       case 1:
-        return '#8c8987';
+        return '#ccc8c4';
 
       case 2:
-        return '#484646';
+        return '#a8a2a2';
 
       case 3:
-        return '#8a8686';
+        return '#d9d2d2';
 
       case 4:
-        return '#9a8f8f';
+        return '#dacdcd';
 
       case 5:
-        return '#737171';
+        return '#dcdcdc';
 
       case 6:
-        return '#916363';
+        return '#9f9999';
 
       case 7:
-        return '#934646';
+        return '#a19999';
 
       case 8:
-        return '#ad4c4c';
+        return '#bbb2b2';
 
       default:
         throw new Error('[ParticleEntity] Color number not defined');

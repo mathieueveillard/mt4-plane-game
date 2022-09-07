@@ -10,11 +10,12 @@ class PlaneEntity {
   public position: PositionGame
   public rotation: number = 0
   public lives: number = 3
+  public delete: boolean = false
 
   public readonly radius: number = 30
 
   private velocity: VelocityGame = new VelocityGame({x: 0, y: 0})
-  private delete: boolean = false
+
   private bullets: number = 5
   private lastShot: number = 0
 
@@ -108,7 +109,7 @@ class PlaneEntity {
     context.translate(this.position.x, this.position.y);
     context.rotate(this.rotation * Math.PI / 180);
     context.strokeStyle = '#ffffff';
-    context.fillStyle = '#000000';
+    context.fillStyle = '#ffffff';
     context.lineWidth = 2;
     context.beginPath();
 
@@ -116,7 +117,7 @@ class PlaneEntity {
 
     // Propeller
     context.fillRect(-5, -12, 10, 1);
-    context.fillRect(-1.5, -12, 3, 2);
+    context.fillRect(-1.5, -13, 3, 5);
     // Body
     context.fillRect(-2.5, -10, 5, 35);
     // Wing

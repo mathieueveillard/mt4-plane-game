@@ -4,11 +4,14 @@ import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import ParticleEntity from "./entities/particle.entity";
-import {ParticleEntityTypeEnum} from "../../enums/games/entities/particle.entity.enum";
+import CloudEntity from "./entities/cloud.entity";
+import CalculatorsApp from "../apps/calculators.app";
 
 class MainGame extends CanvasGame {
+  private cloudMaximum: number = 1
 
   public bullets: BulletEntity[] = []
+  public clouds: CloudEntity[] = []
   public particles: ParticleEntity[] = []
   private users: UserPlayer[] = []
   private planes: PlaneEntity[] = []
@@ -17,7 +20,6 @@ class MainGame extends CanvasGame {
   startGame() {
     const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
     this.planes.push(plane)
-
 
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
     this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
@@ -30,6 +32,11 @@ class MainGame extends CanvasGame {
   update() {
     this.saveContext();
     this.refreshCanvas()
+
+    if (this.clouds.length < this.cloudMaximum) {
+      const cloud = new CloudEntity({game: this})
+      this.clouds.push(cloud)
+    }
 
     const plane = this.planes[0]
 
@@ -47,18 +54,17 @@ class MainGame extends CanvasGame {
       })
     }
 
-
-
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
     this.updateObjects(this.particles)
+    this.updateObjects(this.clouds)
 
-    this.checkCollisionsWith(this.planes, this.bullets)
+    this.checkCollisionsPlanesAndBullets(this.planes, this.bullets)
 
     this.restoreContext()
   }
 
-  checkCollisionsWith(planes: PlaneEntity[], bullets: BulletEntity[]) {
+  checkCollisionsPlanesAndBullets(planes: PlaneEntity[], bullets: BulletEntity[]) {
     for (const bullet of bullets) {
 
       for (const plane of planes) {
@@ -79,7 +85,7 @@ class MainGame extends CanvasGame {
     }
   }
 
-  checkCollision(plane: PlaneEntity, bullet: BulletEntity) {
+  checkCollision(plane: PlaneEntity, bullet: BulletEntity | CloudEntity) {
     const vx = plane.position.x - bullet.position.x;
     const vy = plane.position.y - bullet.position.y;
 
@@ -88,7 +94,7 @@ class MainGame extends CanvasGame {
     return length < plane.radius + bullet.radius && (bullet.plane !== plane)
   }
 
-  updateObjects(items: any[]) {
+  updateObjects(items: PlaneEntity[] | BulletEntity[] | CloudEntity[] | ParticleEntity[]) {
     for (let [idx, item] of items.entries()) {
 
       if (item.delete) {
