@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import { createContext, ReactElement, useEffect, useState } from "react";
 import { SocketDriver } from "../../services/sockets/drivers/socket.driver";
 import { IAppContext, PartStatus } from "../../interfaces/app.context.interface";
-import { IPosition } from "../../interfaces/position.game.interface";
+import { EnemyPosition, IPosition } from "../../interfaces/position.game.interface";
 
 export const AppContext = createContext<IAppContext>({
   socket: null,
@@ -10,7 +10,7 @@ export const AppContext = createContext<IAppContext>({
   partyStatus: "none",
   players: [],
   partyPlayers: [],
-  enemyPosition: { x: 0, y: 0 }
+  enemyPosition: { position: { x: 0, y: 0 }, rotation: 0 }
 })
 
 const AppContextContainer = ({ children }: { children: ReactElement }) => {
@@ -19,7 +19,7 @@ const AppContextContainer = ({ children }: { children: ReactElement }) => {
   const [errorJoining, setErrorJoining] = useState<string>("");
   const [players, setPlayers] = useState<string[]>([]);
   const [partyPlayers, setPartyPlayers] = useState<string[]>([]);
-  const [enemyPosition, setEnemyPosition] = useState<IPosition>({ x: 0, y: 0 });
+  const [enemyPosition, setEnemyPosition] = useState<EnemyPosition>({ position: { x: 0, y: 0 }, rotation: 0 });
 
   useEffect(() => {
     const socketDriver = new SocketDriver()
@@ -60,8 +60,7 @@ const AppContextContainer = ({ children }: { children: ReactElement }) => {
 
     // When a party is stating, change the status
     // It will be handle in component to redirect user
-    socketDriver.socket.on("get_enemy_position", (position: IPosition) => {
-      console.log({ position })
+    socketDriver.socket.on("get_enemy_position", (position: EnemyPosition) => {
       setEnemyPosition(position)
     })
   }, []);

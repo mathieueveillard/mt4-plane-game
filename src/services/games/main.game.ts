@@ -4,7 +4,7 @@ import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import { Socket } from "socket.io-client";
 import ParticleEntity from "./entities/particle.entity";
-import { IPosition } from "../../interfaces/position.game.interface";
+import { EnemyPosition, IPosition } from "../../interfaces/position.game.interface";
 
 class MainGame extends CanvasGame {
 
@@ -51,7 +51,7 @@ class MainGame extends CanvasGame {
     const planeInstructions = this.commands.getPlaneInstructions()
     currentPlane.move(planeInstructions)
 
-    this.sendPositionToEnemies(currentPlane.position)
+    this.sendPositionToEnemies(currentPlane.position, currentPlane.rotation)
 
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
@@ -62,23 +62,26 @@ class MainGame extends CanvasGame {
     this.restoreContext()
   }
 
-  sendPositionToEnemies(position: IPosition) {
+  sendPositionToEnemies(position: IPosition, rotation: number) {
     const dateNow = Date.now()
 
     if (dateNow - this.lastShot > 10) {
       this.planes.forEach((plane) => {
         if (plane.socketId !== this.socket.id) {
-          this.socket.emit("move", plane.socketId, position.x, position.y)
+          this.socket.emit("move", plane.socketId, position.x, position.y, rotation)
         }
       })
     }
   }
 
-  updateEnemyPosition(position: IPosition) {
+  updateEnemyPosition(position: EnemyPosition) {
     const enemyPlane = this.planes[1]
 
+    console.log(position)
+
     if (enemyPlane) {
-      enemyPlane.position = position
+      enemyPlane.position = position.position
+      enemyPlane.rotation = position.rotation
     }
   }
 
