@@ -5,6 +5,7 @@ import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import ParticleEntity from "./entities/particle.entity";
 import CloudEntity from "./entities/cloud.entity";
+import CalculatorsApp from "../apps/calculators.app";
 
 class MainGame extends CanvasGame {
 
@@ -19,7 +20,17 @@ class MainGame extends CanvasGame {
     const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
     this.planes.push(plane)
 
-    const cloud = new CloudEntity({game: this, position: { x: 1000, y: 1000}})
+    // x: randomNumBetweenExcluding(0, this.c.screen.width, ship.position.x-60, ship.position.x+60),
+    //   y: randomNumBetweenExcluding(0, this.state.screen.height, ship.position.y-60, ship.position.y+60)
+
+    const {width, height} = this.getCanvasSize()
+
+
+
+    this.getCanvasSize()
+
+
+    const cloud = new CloudEntity({game: this, position: { x: CalculatorsApp.randomNumberBetween(0, width), y:     CalculatorsApp.randomNumberBetween(0, height)}})
     this.clouds.push(cloud)
 
     console.log(this.clouds)
@@ -115,7 +126,7 @@ class MainGame extends CanvasGame {
     return length < plane.radius + bullet.radius && (bullet.plane !== plane)
   }
 
-  updateObjects(items: any[]) {
+  updateObjects(items: PlaneEntity[] | BulletEntity[] | CloudEntity[] | ParticleEntity[]) {
     for (let [idx, item] of items.entries()) {
 
       if (item.delete) {

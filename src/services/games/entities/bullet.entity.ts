@@ -6,10 +6,11 @@ import VelocityGame from "../settings/velocity.game";
 class BulletEntity {
   public position: PositionGame
   public radius: number = 2
+  public delete: boolean = false
+  
   public readonly plane: PlaneEntity
 
   private velocity: VelocityGame
-  private delete: boolean = false
 
   private readonly rotation: number = 0
   private readonly game: MainGame

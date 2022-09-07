@@ -6,12 +6,11 @@ import {ParticleEntityTypeEnum} from "../../../enums/games/entities/particle.ent
 import CalculatorsApp from "../../apps/calculators.app";
 
 class ParticleEntity {
-  // @ts-ignore
-  public position: PositionGame = null
+  public position: PositionGame
   public radius: number = 3
+  public delete: boolean = false
 
   private velocity: VelocityGame
-  private delete: boolean = false
   private lifeFrame: number = 0
   private color: string = ''
 

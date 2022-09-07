@@ -10,11 +10,12 @@ class PlaneEntity {
   public position: PositionGame
   public rotation: number = 0
   public lives: number = 3
+  public delete: boolean = false
 
   public readonly radius: number = 30
 
   private velocity: VelocityGame = new VelocityGame({x: 0, y: 0})
-  private delete: boolean = false
+
   private bullets: number = 5
   private lastShot: number = 0
 
