@@ -130,13 +130,13 @@ class PlaneEntity {
     context.fill();
     context.stroke();
     context.restore();
+
+    this.getTrail()
   }
 
   private accelerate(speed: number) {
     this.velocity.x -= Math.sin(-this.rotation * Math.PI / 180) * speed;
     this.velocity.y -= Math.cos(-this.rotation * Math.PI / 180) * speed;
-
-    this.getTrail()
   }
 
   private getTrail() {
