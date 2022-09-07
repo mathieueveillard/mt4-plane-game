@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { localStorageService } from "../../../services/apps/local.storage" 
+import { Collapse } from 'antd';
+
+const { Panel } = Collapse;
 
 interface IGAMEKEYSETTING {
   up: number;
@@ -20,26 +23,39 @@ const Setting = () => {
     shoot: 32,
   });
 
-  const handleClick= () => {
-    localStorageService.set('command', gameKeySetting);
+  const handlePanel = () => {
+    localStorageService.set('newsetting', gameKeySetting)
   }
 
   return (
-    <form>
-        <h1>Component Setting</h1>
-        <span>By default azerty</span>
-        <label htmlFor="">UP</label>
-        <input type="text" maxLength={1} onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => setGameKeySetting({...gameKeySetting, up: e.keyCode})}/>
-        <label htmlFor="">BACK</label>
-        <input type="text" maxLength={1} onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => setGameKeySetting({...gameKeySetting, back: e.keyCode})}/>
-        <label htmlFor="">RIGHT</label>
-        <input type="text" maxLength={1} onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => setGameKeySetting({...gameKeySetting, right: e.keyCode})}/>
-        <label htmlFor="">LEFT</label>
-        <input type="text" maxLength={1} onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => setGameKeySetting({...gameKeySetting, left: e.keyCode})}/>
-        <label htmlFor="">Shoot</label>
-        <input type="text" maxLength={1} onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => setGameKeySetting({...gameKeySetting, shoot: e.keyCode})}/>
-        <button type="submit" onClick={handleClick}>Confirm</button>
-    </form>
+      <Collapse accordion onChange={handlePanel}>
+        <Panel header="This is panel header 1" key="1">
+          <form>
+            <title>Component Setting</title>
+            <span>By default azerty</span>
+            <label>UP</label>
+            <input type="text" maxLength={1} onKeyDown={  (e: React.KeyboardEvent<HTMLInputElement>) => { 
+              setGameKeySetting({...gameKeySetting, up: e.keyCode});
+            }}/>
+            <label>BACK</label>
+            <input type="text" maxLength={1} onKeyDown={  (e: React.KeyboardEvent<HTMLInputElement>) => { 
+              setGameKeySetting({...gameKeySetting, back: e.keyCode});
+            }}/>
+            <label>RIGHT</label>
+            <input type="text" maxLength={1} onKeyDown={  (e: React.KeyboardEvent<HTMLInputElement>) => { 
+              setGameKeySetting({...gameKeySetting, right: e.keyCode});
+            }}/>
+            <label>LEFT</label>
+            <input type="text" maxLength={1} onKeyDown={  (e: React.KeyboardEvent<HTMLInputElement>) => { 
+              setGameKeySetting({...gameKeySetting, left: e.keyCode});
+            }}/>
+            <label>Shoot</label>
+            <input type="text" maxLength={1} onKeyDown={  (e: React.KeyboardEvent<HTMLInputElement>) => { 
+              setGameKeySetting({...gameKeySetting, shoot: e.keyCode});
+            }}/>
+          </form>
+        </Panel>
+    </Collapse>
   )
 }
 
