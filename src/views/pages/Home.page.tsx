@@ -1,8 +1,7 @@
 import { useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Alert, Button, Collapse, Form, Input } from "antd";
-import { Socket } from "socket.io-client";
-import { AppContext } from "../../App";
+import { AppContext } from "../contexts/AppContext";
 const { Panel } = Collapse;
 
 const HomePage = () => {

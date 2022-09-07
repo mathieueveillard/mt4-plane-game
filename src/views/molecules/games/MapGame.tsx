@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import MainGame from "../../../services/games/main.game";
-import { AppContext, IPosition } from "../../../App";
-import { Socket } from "socket.io-client";
+import { AppContext } from "../../contexts/AppContext";
 
 
 const MapGame = (props: any) => {
