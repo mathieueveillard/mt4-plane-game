@@ -1,33 +1,47 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import MainGame from "../../../services/games/main.game";
-import { AppContext } from "../../../App";
+import { AppContext, IPosition } from "../../../App";
 import { Socket } from "socket.io-client";
 
 
 const MapGame = (props: any) => {
   const canvasRef = useRef(null)
-  let mainGame: MainGame
+  const [mainGame, setMainGame] = useState<MainGame|null>(null)
 
-  const { socket } = useContext(AppContext);
+  const { socket, partyPlayers, enemyPosition } = useContext(AppContext);
 
   useEffect(() => {
-    if (socket !== null) {
-      const canvas = canvasRef.current as unknown as HTMLCanvasElement
+    const canvas = canvasRef.current as unknown as HTMLCanvasElement
+    const mainGameObject = new MainGame(canvas)
 
-      mainGame = new MainGame(canvas)
-      mainGame.startGame()
-
-      updateMainGame(socket)
-    }
-
-    // setInterval(updateMainGame, 500);
-
+    setMainGame(mainGameObject)
   }, [])
 
-  const updateMainGame = (socket: Socket) => {
-    mainGame.update(socket)
+  useEffect(() => {
+    if (mainGame) {
+      mainGame.updateEnemyPosition(enemyPosition)
+    }
+  }, [enemyPosition]);
 
-    requestAnimationFrame(() => {updateMainGame(socket)});
+
+  useEffect(() => {
+    if (socket !== null && mainGame) {
+      mainGame.startGame(socket, partyPlayers)
+
+      updateMainGame()
+    }
+  }, [mainGame])
+
+  const updateMainGame = () => {
+    if (mainGame) {
+      mainGame.update()
+    }
+
+    // TODO: remove setTimeout for production ?
+    setTimeout(() => {
+      updateMainGame()
+      // requestAnimationFrame(() => {updateMainGame(socket)});
+    }, 10)
   }
 
 

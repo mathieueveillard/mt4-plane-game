@@ -5,12 +5,16 @@ import { Socket } from "socket.io-client";
 
 type PartStatus = "none" | "join" | "starting"
 
+export interface IPosition { x: number, y: number }
+
 export interface IAppContext {
   socket: Socket|null,
   setSocket: (socket: Socket) => void,
   partyStatus: PartStatus
-  errorJoining: string,
+  errorJoining: string
   players: string[]
+  partyPlayers: string[]
+  enemyPosition: IPosition
 }
 
 export const AppContext = createContext<IAppContext>({
@@ -18,7 +22,9 @@ export const AppContext = createContext<IAppContext>({
   setSocket: (socket: Socket) => {},
   errorJoining: "",
   partyStatus: "none",
-  players: []
+  players: [],
+  partyPlayers: [],
+  enemyPosition: { x: 0, y: 0 }
 })
 
 function App() {
@@ -26,6 +32,8 @@ function App() {
   const [partyStatus, setPartyStatus] = useState<PartStatus>("none");
   const [errorJoining, setErrorJoining] = useState<string>("");
   const [players, setPlayers] = useState<string[]>([]);
+  const [partyPlayers, setPartyPlayers] = useState<string[]>([]);
+  const [enemyPosition, setEnemyPosition] = useState<IPosition>({ x: 0, y: 0 });
 
   useEffect(() => {
     const socketDriver = new SocketDriver()
@@ -59,13 +67,21 @@ function App() {
 
     // When a party is stating, change the status
     // It will be handle in component to redirect user
-    socketDriver.socket.on("start", () => {
+    socketDriver.socket.on("start", (players) => {
       setPartyStatus("starting")
+      setPartyPlayers(players)
+    })
+
+    // When a party is stating, change the status
+    // It will be handle in component to redirect user
+    socketDriver.socket.on("get_enemy_position", (position: IPosition) => {
+      console.log({ position })
+      setEnemyPosition(position)
     })
   }, []);
 
   return (
-    <AppContext.Provider value={{ socket, setSocket, errorJoining, partyStatus, players }}>
+    <AppContext.Provider value={{ socket, setSocket, errorJoining, partyStatus, players, enemyPosition, partyPlayers }}>
       <Router/>
     </AppContext.Provider>
   );

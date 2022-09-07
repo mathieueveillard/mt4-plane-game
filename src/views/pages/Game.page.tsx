@@ -3,10 +3,11 @@ import {useEffect} from "react";
 
 const GamePage = () => {
 
-  useEffect(() => {
-    javascript:(function(){var script=document.createElement('script');script.onload=function(){ // @ts-ignore
-      var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
-  })
+  // Is removed because of performance issue
+  // useEffect(() => {
+  //   javascript:(function(){var script=document.createElement('script');script.onload=function(){ // @ts-ignore
+  //     var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+  // })
 
   return (
     <section className="game" style={{overflow: "hidden"}}>

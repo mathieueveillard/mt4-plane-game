@@ -1,54 +1,57 @@
 import CanvasGame from "./settings/canvas.game";
-import UserPlayer from "./players/user.player";
 import PlaneEntity from "./entities/plane.entity";
 import CommandsGame from "./settings/commands.game";
 import BulletEntity from "./entities/bullet.entity";
 import { Socket } from "socket.io-client";
 import ParticleEntity from "./entities/particle.entity";
-import {ParticleEntityTypeEnum} from "../../enums/games/entities/particle.entity.enum";
+import { IPosition } from "../../App";
 
 class MainGame extends CanvasGame {
 
   public bullets: BulletEntity[] = []
   public particles: ParticleEntity[] = []
-  private users: UserPlayer[] = []
   private planes: PlaneEntity[] = []
   private commands = new CommandsGame()
+  private lastShot: number = 0
+  private socket: Socket
 
-  startGame() {
-    const plane = new PlaneEntity({game: this, position: { x: 500, y: 1000}})
-    this.planes.push(plane)
+  startGame(socket: Socket, players: string[]) {
+    this.socket = socket
 
+    const currentPlayer = players.find((player) => player === socket.id)
+    const enemyPlayers = players.filter((player) => player !== socket.id)
 
-    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 100}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 500, y: 500}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 400, y: 100}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 200, y: 500}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 600, y: 150}}))
-    this.planes.push(new PlaneEntity({game: this, position: { x: 600, y: 100}}))
+    if (currentPlayer) {
+      const plane = new PlaneEntity({
+        game: this,
+        position: { x: 200, y: 300},
+        socketId: currentPlayer
+      })
+
+      this.planes.push(plane)
+
+      enemyPlayers.forEach((player, index) => {
+        const plane = new PlaneEntity({
+          game: this,
+          position: { x: 200 * index + 1, y: 300 * index + 1},
+          socketId: player
+        })
+
+        this.planes.push(plane)
+      })
+    }
   }
 
-  update(socket: Socket) {
+  update() {
     this.saveContext();
     this.refreshCanvas()
 
-    const plane = this.planes[0]
+    const currentPlane = this.planes[0]
 
     const planeInstructions = this.commands.getPlaneInstructions()
-    plane.move(planeInstructions)
+    currentPlane.move(planeInstructions)
 
-    // Temporary -> moving plane
-    for (const plane of this.planes.slice(1, this.planes.length)) {
-      plane.move({
-        left: false,
-        right: false,
-        up: false,
-        down: false,
-        space: false,
-      })
-    }
-
-    socket.emit("move", "test", plane.position.y, plane.position.x)
+    this.sendPositionToEnemies(currentPlane.position)
 
     this.updateObjects(this.bullets)
     this.updateObjects(this.planes)
@@ -57,6 +60,26 @@ class MainGame extends CanvasGame {
     this.checkCollisionsWith(this.planes, this.bullets)
 
     this.restoreContext()
+  }
+
+  sendPositionToEnemies(position: IPosition) {
+    const dateNow = Date.now()
+
+    if (dateNow - this.lastShot > 10) {
+      this.planes.forEach((plane, index) => {
+        if (plane.socketId !== this.socket.id) {
+          this.socket.emit("move", plane.socketId, position.x, position.y)
+        }
+      })
+    }
+  }
+
+  updateEnemyPosition(position: IPosition) {
+    const enemyPlane = this.planes[1]
+
+    if (enemyPlane) {
+      enemyPlane.position = position
+    }
   }
 
   checkCollisionsWith(planes: PlaneEntity[], bullets: BulletEntity[]) {
@@ -73,9 +96,7 @@ class MainGame extends CanvasGame {
           } else {
             plane.impact()
           }
-
         }
-
       }
     }
   }

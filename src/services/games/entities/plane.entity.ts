@@ -5,10 +5,9 @@ import PositionGame from "../settings/position.game";
 import VelocityGame from "../settings/velocity.game";
 import ParticleEntity from "./particle.entity";
 import {ParticleEntityTypeEnum} from "../../../enums/games/entities/particle.entity.enum";
-import { SocketDriver } from "../../sockets/drivers/socket.driver";
-import { Socket } from "socket.io-client";
 
 class PlaneEntity {
+  public socketId: string
   public position: PositionGame
   public rotation: number = 0
   public lives: number = 3
@@ -19,7 +18,6 @@ class PlaneEntity {
   private delete: boolean = false
   private bullets: number = 5
   private lastShot: number = 0
-  // private socket: Socket
 
   private readonly speed: number = 0.15
   private readonly speedMinimum: number = 0.03
@@ -27,7 +25,8 @@ class PlaneEntity {
   private readonly rotationSpeed: number = 1.7
   private readonly game: MainGame
 
-  constructor({game, position}: { game: MainGame, position: PositionGame }) {
+  constructor({game, position, socketId}: { game: MainGame, position: PositionGame, socketId: string }) {
+    this.socketId = socketId
     this.position = new PositionGame(position)
 
     this.game = game
@@ -87,9 +86,6 @@ class PlaneEntity {
     if (this.rotation < 0) {
       this.rotation += 360;
     }
-
-    console.log("move")
-    // this.socket.emit("move", "test", this.position.x, this.position.y)
 
     this.screenEdge()
   }
