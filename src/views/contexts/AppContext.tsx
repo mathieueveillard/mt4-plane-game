@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import { createContext, ReactElement, useEffect, useState } from "react";
 import { SocketDriver } from "../../services/sockets/drivers/socket.driver";
 import { IAppContext, PartStatus } from "../../interfaces/app.context.interface";
-import { EnemyPosition, IPosition } from "../../interfaces/position.game.interface";
+import { EnemyPosition } from "../../interfaces/position.game.interface";
 
 export const AppContext = createContext<IAppContext>({
   socket: null,
@@ -62,6 +62,21 @@ const AppContextContainer = ({ children }: { children: ReactElement }) => {
     // It will be handle in component to redirect user
     socketDriver.socket.on("get_enemy_position", (position: EnemyPosition) => {
       setEnemyPosition(position)
+    })
+
+    socketDriver.socket.on("get_shot", () => {
+      console.log("SHOT !")
+      // onShotEvent()
+    })
+
+    socketDriver.socket.on("get_destroy", () => {
+      console.log("DESTROY !")
+      setPartyStatus("lost")
+    })
+
+    socketDriver.socket.on("enemy_destroy", () => {
+      console.log("DESTROY !")
+      setPartyStatus("win")
     })
   }, []);
 

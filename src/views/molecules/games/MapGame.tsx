@@ -7,11 +7,15 @@ const MapGame = (props: any) => {
   const canvasRef = useRef(null)
   const [mainGame, setMainGame] = useState<MainGame|null>(null)
 
-  const { socket, partyPlayers, enemyPosition } = useContext(AppContext);
+  const { socket, partyPlayers, enemyPosition, partyStatus } = useContext(AppContext);
 
   useEffect(() => {
     const canvas = canvasRef.current as unknown as HTMLCanvasElement
     const mainGameObject = new MainGame(canvas)
+
+    // if (setOnShortEvent) {
+    //   setOnShortEvent(onShot)
+    // }
 
     setMainGame(mainGameObject)
   }, [])
@@ -44,7 +48,16 @@ const MapGame = (props: any) => {
   }
 
 
-  return (<canvas ref={canvasRef} {...props}/>)
+  switch (partyStatus) {
+    case "starting":
+      return (<canvas ref={canvasRef} {...props}/>)
+    case "lost":
+      return <h1>Looooooooser</h1>
+    case "win":
+      return <h1>Oh tu es le boss !</h1>
+    default:
+      return <>Une erreur est survenu</>
+  }
 }
 
 export default MapGame

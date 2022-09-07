@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { EnemyPosition } from "./position.game.interface";
 
-export type PartStatus = "none" | "join" | "starting"
+export type PartStatus = "none" | "join" | "starting" | "win" | "lost"
 
 export interface IAppContext {
   socket: Socket|null,

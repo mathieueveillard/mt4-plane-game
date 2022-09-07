@@ -24,7 +24,7 @@ class MainGame extends CanvasGame {
     if (currentPlayer) {
       const plane = new PlaneEntity({
         game: this,
-        position: { x: 200, y: 300},
+        position: { x: 200, y: 300 },
         socketId: currentPlayer
       })
 
@@ -33,7 +33,7 @@ class MainGame extends CanvasGame {
       enemyPlayers.forEach((player, index) => {
         const plane = new PlaneEntity({
           game: this,
-          position: { x: 200 * index + 1, y: 300 * index + 1},
+          position: { x: 200 * index + 1, y: 300 * index + 1 },
           socketId: player
         })
 
@@ -75,9 +75,7 @@ class MainGame extends CanvasGame {
   }
 
   updateEnemyPosition(position: EnemyPosition) {
-    const enemyPlane = this.planes[1]
-
-    console.log(position)
+    const enemyPlane = this.planes.find((plane) => plane.socketId !== this.socket.id)
 
     if (enemyPlane) {
       enemyPlane.position = position.position
@@ -91,11 +89,13 @@ class MainGame extends CanvasGame {
       for (const plane of planes) {
 
         if (this.checkCollision(plane, bullet)) {
+          this.socket.emit("shoot", plane.socketId)
+
           bullet.destroy()
 
           if (plane.lives === 1) {
             plane.destroy()
-
+            this.socket.emit("destroy", plane.socketId)
           } else {
             plane.impact()
           }
